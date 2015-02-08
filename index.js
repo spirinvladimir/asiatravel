@@ -1,8 +1,13 @@
 var static = require('node-static');
-var file = new static.Server('./');
- 
-require('http').createServer(function (request, response) {
-    request.addListener('end', function () { 
-        file.serve(request, response);
-    }).resume();
-}).listen(process.env.VCAP_APP_PORT || 8080);
+    builder = require('./builder'),
+    file = new static.Server('./'),
+    http = require('http');
+
+
+builder(function () {
+    http.createServer(function (request, response) {
+        request.addListener('end', function () { 
+            file.serve(request, response);
+        }).resume();
+    }).listen(process.env.VCAP_APP_PORT || 8080);
+});
